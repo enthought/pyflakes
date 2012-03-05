@@ -96,6 +96,9 @@ class CouldNotCompile(Error):
         if msg and line:
             self._message = 'could not compile: %s\n%s'
             message_args = (msg, line)
+        elif msg:
+            self._message = 'could not compile: %s'
+            message_args = (msg,)
         else:
             self._message = 'could not compile'
             message_args = ()
