@@ -3,6 +3,7 @@
 class Message(object):
     _message = ''
     level = 'N'
+    severity = 0
 
     message = property(fget=lambda self: self._message % self.message_args)
 
@@ -20,12 +21,16 @@ class Message(object):
 
 class Warning(Message):
     level = 'W'
+    severity = 0
 
 class Error(Message):
     level = 'E'
+    # All errors have the highest severity
+    severity = 5
 
 class UnusedImport(Warning):
     _message = '%r imported but unused'
+    severity = 0
 
     def __init__(self, filename, loc, name):
         Warning.__init__(self, filename, loc, use_column=False, message_args=(name,))
@@ -33,6 +38,7 @@ class UnusedImport(Warning):
 
 class RedefinedWhileUnused(Warning):
     _message = 'redefinition of unused %r from line %r'
+    severity = 1
 
     def __init__(self, filename, loc, name, orig_loc):
         Warning.__init__(self, filename, loc, message_args=(name, orig_loc.lineno))
@@ -41,6 +47,7 @@ class RedefinedWhileUnused(Warning):
 
 class ImportShadowedByLoopVar(Warning):
     _message = 'import %r from line %r shadowed by loop variable'
+    severity = 2
 
     def __init__(self, filename, loc, name, orig_loc):
         Warning.__init__(self, filename, loc, message_args=(name, orig_loc.lineno))
@@ -49,6 +56,7 @@ class ImportShadowedByLoopVar(Warning):
 
 class ImportStarUsed(Warning):
     _message = "'from %s import *' used; unable to detect undefined names"
+    severity = 0
 
     def __init__(self, filename, loc, modname):
         Warning.__init__(self, filename, loc, message_args=(modname,))
@@ -85,6 +93,7 @@ class DuplicateArgument(Error):
 
 class RedefinedFunction(Warning):
     _message = 'redefinition of function %r from line %r'
+    severity = 2
 
     def __init__(self, filename, loc, name, orig_loc):
         Warning.__init__(self, filename, loc, message_args=(name, orig_loc.lineno))
@@ -107,6 +116,7 @@ class CouldNotCompile(Error):
         self.line = line
 
 class LateFutureImport(Warning):
+    severity = 1
     _message = 'future import(s) %r after other statements'
 
     def __init__(self, filename, loc, names):
@@ -120,6 +130,7 @@ class UnusedVariable(Warning):
     """
 
     _message = 'local variable %r is assigned to but never used'
+    severity = 3
 
     def __init__(self, filename, loc, name):
         Warning.__init__(self, filename, loc, message_args=(name,))
