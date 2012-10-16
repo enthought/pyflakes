@@ -7,6 +7,9 @@ class Message(object):
 
     message = property(fget=lambda self: self._message % self.message_args)
 
+    # Change the severity comparison to affect which warnings are considered errors
+    severe = property(fget=lambda self: self.severity > 1)
+
     def __init__(self, filename, loc, use_column=True, message_args=()):
         self.filename = filename
         self.lineno = loc.lineno
