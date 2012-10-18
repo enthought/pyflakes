@@ -8,7 +8,7 @@ class Message(object):
     message = property(fget=lambda self: self._message % self.message_args)
 
     # Change the severity comparison to affect which warnings are considered errors
-    severe = property(fget=lambda self: self.severity > 1)
+    severe = property(fget=lambda self: self.severity > 2)
 
     def __init__(self, filename, loc, use_column=True, message_args=()):
         self.filename = filename
@@ -50,7 +50,7 @@ class RedefinedWhileUnused(Warning):
 
 class ImportShadowedByLoopVar(Warning):
     _message = 'import %r from line %r shadowed by loop variable'
-    severity = 2
+    severity = 3
 
     def __init__(self, filename, loc, name, orig_loc):
         Warning.__init__(self, filename, loc, message_args=(name, orig_loc.lineno))
@@ -59,7 +59,7 @@ class ImportShadowedByLoopVar(Warning):
 
 class ImportStarUsed(Warning):
     _message = "'from %s import *' used; unable to detect undefined names"
-    severity = 0
+    severity = 2
 
     def __init__(self, filename, loc, modname):
         Warning.__init__(self, filename, loc, message_args=(modname,))
@@ -96,7 +96,7 @@ class DuplicateArgument(Error):
 
 class RedefinedFunction(Warning):
     _message = 'redefinition of function %r from line %r'
-    severity = 2
+    severity = 3
 
     def __init__(self, filename, loc, name, orig_loc):
         Warning.__init__(self, filename, loc, message_args=(name, orig_loc.lineno))
@@ -133,7 +133,7 @@ class UnusedVariable(Warning):
     """
 
     _message = 'local variable %r is assigned to but never used'
-    severity = 3
+    severity = 2
 
     def __init__(self, filename, loc, name):
         Warning.__init__(self, filename, loc, message_args=(name,))
